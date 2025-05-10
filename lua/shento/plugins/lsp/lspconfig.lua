@@ -134,6 +134,14 @@ return {
 					},
 				})
 			end,
+			["volar"] = function()
+				lspconfig["volar"].setup({
+					capabilities = capabilities,
+					filetypes = {
+						"vue",
+					},
+				})
+			end,
 			["tailwindcss"] = function()
 				lspconfig["tailwindcss"].setup({
 					capabilities = capabilities,

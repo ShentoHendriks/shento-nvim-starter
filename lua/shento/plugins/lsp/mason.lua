@@ -29,6 +29,7 @@ return {
 			ensure_installed = {
 				"ts_ls",
 				"html",
+				"volar",
 				"cssls",
 				"tailwindcss",
 				"svelte",
