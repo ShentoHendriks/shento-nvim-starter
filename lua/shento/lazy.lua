@@ -11,4 +11,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("shento.plugins")
+require("lazy").setup("josean.plugins", {
+  change_detection = {
+    notify = false,
+  },
+})
