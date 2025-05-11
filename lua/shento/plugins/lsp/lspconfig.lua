@@ -114,6 +114,9 @@ return {
 						"javascript",
 						"javascriptreact",
 						"typescriptreact",
+						"javascript.jsx",
+						"typescript",
+						"typescript.tsx",
 					},
 				})
 			end,
