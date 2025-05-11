@@ -28,3 +28,6 @@ opt.signcolumn = "yes" -- Always-visible sign column, avoids shifting text
 -- Split settings
 opt.splitbelow = true
 opt.splitright = true
+
+-- Clipboard settings
+opt.clipboard = "unnamedplus"
