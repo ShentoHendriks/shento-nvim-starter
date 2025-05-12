@@ -2,65 +2,80 @@
 
 -- Define your LSP servers *once* at the very top (use Mason IDs)
 local lsp_servers = { -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp to see all lsp options
-  "lua_ls",
-  "cssls",
-  "ts_ls",
-  "emmet_ls",
-  "svelte",
-  "html",
-  "volar",
-  "tailwindcss",
-  "css_variables",
-  "cssmodules_ls",
+	"lua_ls",
+	"cssls",
+	"ts_ls",
+	"emmet_ls",
+	"svelte",
+	"html",
+	"volar",
+	"tailwindcss",
+	"css_variables",
+	"cssmodules_ls",
 }
 
 return {
-  -- Mason: LSP/DAP/formatter installer
-  {
-    "williamboman/mason.nvim",
-    build = ":MasonUpdate",
-    config = true,
-  },
+	-- Mason: LSP/DAP/formatter installer
+	{
+		"williamboman/mason.nvim",
+		build = ":MasonUpdate",
+		config = true,
+	},
 
-  -- Native Neovim LSP setup (actual LSP configuration)
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "antosha417/nvim-lsp-file-operations",
-    },
-    config = function()
-      local lspconfig = require("lspconfig")
-      for _, server in ipairs(lsp_servers) do
-        lspconfig[server].setup({})
-      end
+	-- Native Neovim LSP setup (actual LSP configuration)
+	{
+		"neovim/nvim-lspconfig",
+		dependencies = {
+			"antosha417/nvim-lsp-file-operations",
+			"saghen/blink.cmp",
+		},
+		opts = {
+			servers = {
+				lua_ls = {},
+				cssls = {},
+				ts_ls = {},
+				emmet_ls = {},
+				svelte = {},
+				html = {},
+				volar = {},
+				tailwindcss = {},
+				css_variables = {},
+				cddmodules_ls = {},
+			},
+		},
+		config = function(_, opts)
+			local lspconfig = require("lspconfig")
+			for server, config in pairs(opts.servers) do
+				config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+				lspconfig[server].setup(config)
+			end
+			vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "LSP Rename" })
+		end,
+	},
 
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "LSP Rename" })
-    end,
-  },
+	{ "rafamadriz/friendly-snippets" },
 
-  { "rafamadriz/friendly-snippets" },
-
-  -- Completion engine (blink.cmp)
-  {
-    "saghen/blink.cmp",
-    version = "1.*",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    opts = {
-      keymap = {
-        preset = "none",
-        ["<C-j>"] = { "select_next", "fallback" }, -- Ctrl-j: next suggestion
-        ["<C-k>"] = { "select_prev", "fallback" }, -- Ctrl-h: previous suggestion
-        ["<Tab>"] = { "accept", "fallback" },  -- Enter: accept selection
-      },
-      appearance = { nerd_font_variant = "mono" },
-      completion = {
-        documentation = { auto_show = true },
-      },
-      sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-      },
-      fuzzy = { implementation = "prefer_rust_with_warning" },
-    },
-    opts_extend = { "sources.default" },
-  },
+	-- Completion engine (blink.cmp)
+	{
+		"saghen/blink.cmp",
+		version = "1.*",
+		dependencies = { "rafamadriz/friendly-snippets" },
+		opts = {
+			keymap = {
+				preset = "none",
+				["<C-j>"] = { "select_next", "fallback" }, -- Ctrl-j: next suggestion
+				["<C-k>"] = { "select_prev", "fallback" }, -- Ctrl-h: previous suggestion
+				["<Tab>"] = { "accept", "fallback" }, -- Enter: accept selection
+			},
+			appearance = { nerd_font_variant = "mono" },
+			completion = {
+				documentation = { auto_show = true },
+			},
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+			},
+			fuzzy = { implementation = "prefer_rust_with_warning" },
+		},
+		opts_extend = { "sources.default" },
+	},
 }
