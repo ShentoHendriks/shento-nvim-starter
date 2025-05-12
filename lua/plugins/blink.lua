@@ -14,13 +14,6 @@ return {
     appearance = { nerd_font_variant = "mono" },
     completion = {
       documentation = { auto_show = true },
-      keyword = { range = "full" },
-      trigger = {
-        prefetch_on_insert = true,
-        show_in_snippet = false,
-        show_on_keyword = true,
-        show_on_trigger_character = true,
-      },
     },
     signature = {
       enabled = true,
@@ -31,11 +24,11 @@ return {
     sources = {
       default = { "lsp", "path", "snippets", "buffer" },
     },
-    fuzzy = {
-      implementation = "prefer_rust_with_warning",
-      use_frecency = true,
-      use_proximity = true,
-    },
+  },
+  fuzzy = {
+    implementation = "prefer_rust_with_warning",
+    use_frecency = true,
+    use_proximity = true,
   },
   opts_extend = { "sources.default" },
 }
