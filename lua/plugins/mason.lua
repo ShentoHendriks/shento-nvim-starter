@@ -2,58 +2,63 @@
 
 -- Define your LSP servers *once* at the very top (use Mason IDs)
 local lsp_servers = {
-  "lua_ls",
-  "cssls",
-  "ts_ls",
-  "emmet_ls",
-  "html",
-  "volar",
-  "tailwindcss",
+	"lua_ls",
+	"cssls",
+	"ts_ls",
+	"emmet_ls",
+	"html",
+	"volar",
+	"tailwindcss",
 }
 
 return {
-  -- Mason: LSP/DAP/formatter installer
-  {
-    "williamboman/mason.nvim",
-    build = ":MasonUpdate",
-    config = true,
-  },
+	-- Mason: LSP/DAP/formatter installer
+	{
+		"williamboman/mason.nvim",
+		build = ":MasonUpdate",
+		config = true,
+	},
 
-  -- Native Neovim LSP setup (actual LSP configuration)
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      local lspconfig = require("lspconfig")
-      for _, server in ipairs(lsp_servers) do
-        lspconfig[server].setup({})
-      end
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "LSP Rename" })
-    end,
-  },
+	-- Native Neovim LSP setup (actual LSP configuration)
+	{
+		"neovim/nvim-lspconfig",
+		dependencies = {
+			"antosha417/nvim-lsp-file-operations",
+		},
+		config = function()
+			local lspconfig = require("lspconfig")
 
-  { "rafamadriz/friendly-snippets" },
+			for _, server in ipairs(lsp_servers) do
+				lspconfig[server].setup({})
+			end
 
-  -- Completion engine (blink.cmp)
-  {
-    "saghen/blink.cmp",
-    version = "1.*",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    opts = {
-      keymap = {
-        preset = "none",
-        ["<C-j>"] = { "select_next", "fallback" }, -- Ctrl-j: next suggestion
-        ["<C-k>"] = { "select_prev", "fallback" }, -- Ctrl-h: previous suggestion
-        ["<Tab>"] = { "accept", "fallback" },  -- Enter: accept selection
-      },
-      appearance = { nerd_font_variant = "mono" },
-      completion = {
-        documentation = { auto_show = true },
-      },
-      sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-      },
-      fuzzy = { implementation = "prefer_rust_with_warning" },
-    },
-    opts_extend = { "sources.default" },
-  },
+			vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "LSP Rename" })
+		end,
+	},
+
+	{ "rafamadriz/friendly-snippets" },
+
+	-- Completion engine (blink.cmp)
+	{
+		"saghen/blink.cmp",
+		version = "1.*",
+		dependencies = { "rafamadriz/friendly-snippets" },
+		opts = {
+			keymap = {
+				preset = "none",
+				["<C-j>"] = { "select_next", "fallback" }, -- Ctrl-j: next suggestion
+				["<C-k>"] = { "select_prev", "fallback" }, -- Ctrl-h: previous suggestion
+				["<Tab>"] = { "accept", "fallback" }, -- Enter: accept selection
+			},
+			appearance = { nerd_font_variant = "mono" },
+			completion = {
+				documentation = { auto_show = true },
+			},
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+			},
+			fuzzy = { implementation = "prefer_rust_with_warning" },
+		},
+		opts_extend = { "sources.default" },
+	},
 }
